@@ -8,7 +8,7 @@ export const fetchLogs = createAsyncThunk<IEventLogs[], number>(
   "logs/fetchLogs",
   async (page) => {
     let { data } = await axios.get<IEventLogs[]>(
-      `${serverPath}?_limit=20&_page=${page}`
+      `${serverPath}?_limit=1&_page=${page}`
     );
 
     return data.map((obj) => {

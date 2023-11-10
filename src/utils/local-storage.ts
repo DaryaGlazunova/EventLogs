@@ -30,7 +30,7 @@ export const changeLogFromLS = (logId: number) => {
   const logs = getLogsFromLS();
   logs.forEach((item) => {
     if (item.id === logId) {
-      item.completed = !item.completed;
+      item.completed = true;
     }
   });
   setLogsToLS(logs, "change");
