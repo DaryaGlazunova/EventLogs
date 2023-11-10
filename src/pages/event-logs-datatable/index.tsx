@@ -1,12 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Column } from "primereact/column";
 import "./_index.scss";
-import {
-  DataTable,
-  DataTableDataSelectableEvent,
-  DataTableSelectionMultipleChangeEvent,
-  DataTableSelectionSingleChangeEvent,
-} from "primereact/datatable";
+import { DataTable, DataTableDataSelectableEvent } from "primereact/datatable";
 import { RootState, useAppDispatch } from "../../redux/store";
 import { useSelector } from "react-redux";
 import { IEventLogs } from "../../redux/logs/types";
@@ -23,8 +18,8 @@ const EventLogsDatatable: React.FC = () => {
   const currentPage = useSelector((state: RootState) => state.logs.page);
   const [selectedLog, setSelectedLog] = useState<IEventLogs | null>(null);
   const selectedLogRef = useRef(selectedLog);
-  const searchValue = useSelector(
-    (state: RootState) => state.filter.searchValue
+  const { searchValue, onlyUnread } = useSelector(
+    (state: RootState) => state.filter
   );
 
   const isSelectable = (data: IEventLogs) => data.completed === false;
@@ -40,7 +35,6 @@ const EventLogsDatatable: React.FC = () => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const key = event.code;
-      console.log(selectedLogRef.current?.id);
       if (key !== "Space" || !selectedLogRef.current?.id) return;
       changeLogFromLS(selectedLogRef.current.id);
       setLocalLogs(getLogsFromLS());
@@ -70,8 +64,18 @@ const EventLogsDatatable: React.FC = () => {
 
   React.useEffect(() => {
     setLogsToLS(logs, "new");
-    setLocalLogs(getLogsFromLS());
-  }, [logs]);
+    if (onlyUnread) {
+      setLocalLogs(
+        getLogsFromLS()
+          .filter((item) => item.title?.includes(searchValue))
+          .filter((item) => item.completed !== onlyUnread)
+      );
+    } else {
+      setLocalLogs(
+        getLogsFromLS().filter((item) => item.title?.includes(searchValue))
+      );
+    }
+  }, [logs, searchValue, onlyUnread, localLogs]);
 
   return (
     <DataTable
@@ -79,7 +83,6 @@ const EventLogsDatatable: React.FC = () => {
       selectionMode="single"
       selection={selectedLog!}
       onSelectionChange={(e) => {
-        console.log(e.value);
         setSelectedLog(e.value);
       }}
       dataKey="id"
@@ -87,8 +90,6 @@ const EventLogsDatatable: React.FC = () => {
       paginator
       rows={5}
       rowsPerPageOptions={[5, 10, 25, 50]}
-      globalFilter={searchValue}
-      globalFilterFields={["title"]}
       emptyMessage="No logs found."
       isDataSelectable={isRowSelectable}
       rowClassName={rowClassName}

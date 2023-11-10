@@ -1,15 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { FilterMatchMode } from "primereact/api";
 
 export interface IntefaceFilterState {
   searchValue: string;
-  matchMode: FilterMatchMode.CONTAINS;
+  onlyUnread: boolean;
 }
 
 const initialState: IntefaceFilterState = {
   searchValue: "",
-  matchMode: FilterMatchMode.CONTAINS,
+  onlyUnread: false,
 };
 
 export const filterSlice = createSlice({
@@ -19,9 +18,12 @@ export const filterSlice = createSlice({
     setSearchValue(state, action: PayloadAction<string>) {
       state.searchValue = action.payload;
     },
+    setOnlyUnread(state) {
+      state.onlyUnread = !state.onlyUnread;
+    },
   },
 });
 
-export const { setSearchValue } = filterSlice.actions;
+export const { setSearchValue, setOnlyUnread } = filterSlice.actions;
 
 export default filterSlice.reducer;

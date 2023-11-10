@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./components/header";
 import EventLogsDatatable from "./pages/event-logs-datatable";
-import EventLogsCards from "./pages/event-logs-cards";
 
 const App: React.FC = () => {
   return (
@@ -9,7 +8,6 @@ const App: React.FC = () => {
       <Header />
       <main>
         <EventLogsDatatable />
-        {/* <EventLogsCards /> */}
       </main>
     </div>
   );

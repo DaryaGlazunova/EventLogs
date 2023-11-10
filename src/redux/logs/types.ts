@@ -1,12 +1,3 @@
-// export interface IEventLogs {
-//   id?: string;
-//   date?: string;
-//   equipment?: string;
-//   message?: string;
-//   responsible?: string;
-//   read?: boolean;
-// }
-
 export interface IEventLogs {
   id?: number;
   userId?: number;
@@ -14,13 +5,6 @@ export interface IEventLogs {
   completed?: boolean;
   date?: string;
 }
-
-// export type TSearchProductParams = {
-//   sortBy: string;
-//   order: string;
-//   categoryName: string;
-//   search: string;
-// };
 
 export enum Status {
   LOADING = "loading",

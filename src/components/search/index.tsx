@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { setSearchValue } from "../../redux/filter/filterSlider";
-
 import "./_index.scss";
-import { useAppDispatch } from "../../redux/store";
 
-const Search: React.FC = () => {
+interface SearchProps {
+  onClickSerachButton: (value: string) => void;
+}
+
+const Search: React.FC<SearchProps> = ({ onClickSerachButton }) => {
   const [searchValueLocal, setSearchValueLocal] = useState<string>("");
   const searchInputRef = React.useRef<HTMLInputElement>(null);
-  const dispatch = useAppDispatch();
-
-  const onClickSerachButton = () => {
-    dispatch(setSearchValue(searchValueLocal));
-  };
 
   const onChangeSearchValue = (value: string) => {
     setSearchValueLocal(value);
@@ -26,7 +22,10 @@ const Search: React.FC = () => {
         value={searchValueLocal}
         onChange={(event) => onChangeSearchValue(event.target.value)}
       />
-      <Button onClick={() => onClickSerachButton()} label="Поиск" />
+      <Button
+        onClick={() => onClickSerachButton(searchValueLocal)}
+        label="Поиск"
+      />
     </div>
   );
 };
