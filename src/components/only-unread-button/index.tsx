@@ -13,7 +13,7 @@ const UnReadButton: React.FC<unReadButtonProps> = ({
 }) => {
   return (
     <div className="only-unread-button">
-      <p>показать только непрочитанные</p>
+      <p>Показать только непрочитанные</p>
       <ToggleButton
         checked={checked}
         onChange={onClickUnReadButton}

@@ -14,9 +14,13 @@ import { changeLogFromLS } from "../../utils/local-storage";
 const EventLogsDatatable: React.FC = () => {
   const dispatch = useAppDispatch();
   const logs = useSelector((state: RootState) => state.logs.items);
+  const { windowWidth, breakPointMobile } = useSelector(
+    (state: RootState) => state.window
+  );
   const [localLogs, setLocalLogs] = useState<IEventLogs[]>([]);
   const currentPage = useSelector((state: RootState) => state.logs.page);
   const [selectedLog, setSelectedLog] = useState<IEventLogs | null>(null);
+  const [readLog, setReadLog] = useState<IEventLogs | null>(null);
   const selectedLogRef = useRef(selectedLog);
   const { searchValue, onlyUnread } = useSelector(
     (state: RootState) => state.filter
@@ -38,6 +42,8 @@ const EventLogsDatatable: React.FC = () => {
       if (key !== "Space" || !selectedLogRef.current?.id) return;
       changeLogFromLS(selectedLogRef.current.id);
       setLocalLogs(getLogsFromLS());
+
+      setReadLog(selectedLogRef.current);
     };
 
     document.addEventListener("keydown", (event) => onKeyDown(event));
@@ -50,13 +56,13 @@ const EventLogsDatatable: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getLogs();
-    }, 5000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     getLogs();
+  //   }, 5000);
 
-    return () => clearInterval(interval);
-  }, [currentPage]);
+  //   return () => clearInterval(interval);
+  // }, [currentPage]);
 
   React.useEffect(() => {
     getLogs();
@@ -75,7 +81,22 @@ const EventLogsDatatable: React.FC = () => {
         getLogsFromLS().filter((item) => item.title?.includes(searchValue))
       );
     }
-  }, [logs, searchValue, onlyUnread, localLogs]);
+  }, [logs, searchValue, onlyUnread, readLog]);
+
+  // React.useEffect(() => {
+  //   setLogsToLS(logs, "new");
+  //   if (onlyUnread) {
+  //     setLocalLogs(
+  //       getLogsFromLS()
+  //         .filter((item) => item.title?.includes(searchValue))
+  //         .filter((item) => item.completed !== onlyUnread)
+  //     );
+  //   } else {
+  //     setLocalLogs(
+  //       getLogsFromLS().filter((item) => item.title?.includes(searchValue))
+  //     );
+  //   }
+  // }, [logs, searchValue, onlyUnread, localLogs]);
 
   return (
     <DataTable
@@ -86,9 +107,14 @@ const EventLogsDatatable: React.FC = () => {
         setSelectedLog(e.value);
       }}
       dataKey="id"
-      tableStyle={{ minWidth: "50rem" }}
+      tableStyle={{ minWidth: "30rem" }}
       paginator
       rows={5}
+      paginatorTemplate={
+        windowWidth > breakPointMobile
+          ? "PrevPageLink PageLinks NextPageLink RowsPerPageDropdown CurrentPageReport"
+          : "  FirstPageLink PrevPageLink JumpToPageInput NextPageLink LastPageLink"
+      }
       rowsPerPageOptions={[5, 10, 25, 50]}
       emptyMessage="No logs found."
       isDataSelectable={isRowSelectable}
