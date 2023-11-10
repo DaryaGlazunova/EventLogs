@@ -1,0 +1,12 @@
+.header {
+  &__container {
+    display: flex;
+    justify-content: space-between;
+  }
+  &__theme {
+    & span {
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+}

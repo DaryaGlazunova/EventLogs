@@ -1,0 +1,37 @@
+html,
+body {
+  height: 100%;
+}
+#root {
+  height: 100%;
+}
+
+.wrapper {
+  overflow: hidden;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  flex: 0 0 auto;
+}
+
+main {
+  flex: 0 1 auto;
+  margin: 50px 15px;
+}
+
+.container {
+  box-sizing: border-box;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+html[data-theme="light"] {
+  @import "./themes/lara/lara-light/blue/theme.scss";
+}
+
+html[data-theme="dark"] {
+  @import "./themes/lara/lara-dark/blue/theme.scss";
+}
